@@ -1,0 +1,5 @@
+bot:
+  BOT_TOKEN: 5964226264:AAF2IU0beyneUUnF5TMdegweEJt5jxS6vV0
+  BOT_USERNAME: ssk_shooting_bot
+server:
+  PORT: 5000
