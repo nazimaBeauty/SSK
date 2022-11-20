@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
@@ -34,6 +36,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
         menu.add(new BotCommand("/prices", "Цены"));
         menu.add(new BotCommand("/certificate", "Подарочные сертификаты"));
         menu.add(new BotCommand("/timetable", "Расписание"));
+        menu.add(new BotCommand("/club", "Как стать членом клуба"));
         menu.add(new BotCommand("/arsenal", "Арсенал"));
         menu.add(new BotCommand("/contact", "Контакты"));
         try {
@@ -55,15 +58,44 @@ public class TelegramBotClass extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        String temp;
         if (update.hasMessage() && update.getMessage().hasText()) {
             switch (update.getMessage().getText()) {
                 case "/start":
                     aboutUs(update);
                     break;
                 case "/prices":
-
+                    temp = """
+                            УСЛУГИ КЛУБА
+                            Аренда галереи - Договорная
+                            Хранение оружия - Договорная
+                            Чистка оружия - Договорная
+                            Пристрелка оружия - Договорная
+                            Диагностика оружия - Договорная
+                            Аренда шкафчика - Договорная
+                            9×19 Luger ТПЗ - Договорная
+                            9×18 БПЗ - Договорная
+                            .40 S&B - Договорная
+                            .45 ACP ТПЗ - Договорная
+                            .22 LR S&B - Договорная
+                            5,45×39 / 7,62×39 / .223Rem (5,56×45) - Договорная
+                            12×76 - Договорная
+                            .50 AE (Desert Eagle) - Договорная
+                            """;
+                    sendMessage(update, temp);
+                    sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/SSK/blob/main/src/main/resources/static/img/1.jpg?raw=true");
+                    sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/SSK/blob/main/src/main/resources/static/img/1.jpg?raw=true");
+                    sendMessage(update, """
+                            !!!Всем участникам тренировочных занятий необходимо быть членами клуба.
+                            Все участники тренировочных занятий обязаны следовать Правилам клуба и нести ответственность за их несоблюдение.
+                            Выстрелы оплачиваются отдельно на рецепции.
+                            Минимальная длительность тренировки 1 час.!!!""");
+                    break;
+                case "/club":
+                    temp = "ПРАВИЛА ПОСЕЩЕНИЯ";
                     break;
                 case "/certificate":
+
                     break;
                 case "/timetable":
                     break;
@@ -76,6 +108,30 @@ public class TelegramBotClass extends TelegramLongPollingBot {
             }
         } else if (update.hasCallbackQuery()) {
         } else if (update.hasMessage() && update.getMessage().hasPhoto()) {
+        }
+    }
+
+    private void sendMessage(Update update, String s) {
+        SendMessage message = new SendMessage();
+        message.setChatId(update.getMessage().getChatId().toString());
+        message.setReplyToMessageId(update.getMessage().getMessageId());
+        message.setText(s);
+        try {
+            execute(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendPhoto(long chat_id, String s) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(chat_id);
+        InputFile inputFile = new InputFile(s);
+        sendPhoto.setPhoto(inputFile);
+        try {
+            execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
