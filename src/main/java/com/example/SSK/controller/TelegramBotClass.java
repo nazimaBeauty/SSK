@@ -1,7 +1,9 @@
 package com.example.SSK.controller;
 
+import com.example.SSK.model.CounterM;
 import com.example.SSK.model.InfoUser;
 import com.example.SSK.model.UserMessages;
+import com.example.SSK.repo.CounterR;
 import com.example.SSK.repo.InofUserR;
 import com.example.SSK.repo.UserMessageR;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +34,14 @@ public class TelegramBotClass extends TelegramLongPollingBot {
     String BOT_TOKEN;
     String BOT_USERNAME;
     String globalMessage = "";
+    int start = 0, prices = 0, certificate = 0, timetable = 0, club = 0, arsenal = 0, contactm = 0;
 
     @Autowired
     InofUserR inofUserR;
     @Autowired
     UserMessageR userMessageR;
+    @Autowired
+    CounterR counterR;
 
     TelegramBotClass(@Value("${bot.BOT_TOKEN}") String BOT_TOKEN, @Value("${bot.BOT_USERNAME}") String BOT_USERNAME) {
         this.BOT_TOKEN = BOT_TOKEN;
@@ -80,6 +85,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                 switch (update.getMessage().getText()) {
                     case "/start":
                         aboutUs(update);
+                        start++;
                         break;
                     case "/prices":
                         temp = """
@@ -109,6 +115,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                 Все участники тренировочных занятий обязаны следовать Правилам клуба и нести ответственность за их несоблюдение.
                                 Выстрелы оплачиваются отдельно на рецепции.
                                 Минимальная длительность тренировки 1 час.!!!""");
+                        prices++;
                         break;
                     case "/club":
                         temp = "ПРАВИЛА ПОСЕЩЕНИЯ";
@@ -124,12 +131,14 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                 ✓ очки и наушники
                                 ✓ боевое оружие""";
                         sendMessage(update, temp);
+                        club++;
                         break;
                     case "/certificate":
                         type(update.getMessage().getChatId());
+                        certificate++;
                         break;
                     case "/timetable":
-
+                        timetable++;
                         break;
                     case "/arsenal":
                         sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/karvenBot/blob/master/src/main/resources/image.png?raw=true");
@@ -137,6 +146,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                 АРСЕНАЛ КЛУБА
                                 Стрелковый клуб располагает самым большим в Бишкеке арсеналом оружия различных марок, моделей и калибров""";
                         sendMessage(update, temp + "\n\nhttp://919.kg/#prsert");
+                        arsenal++;
                         break;
                     case "Геолокация":
                         sendMessage(update, "Мы находимся: ");
@@ -156,6 +166,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                                                 
                                 whatsapp: https://wa.link/gfoqva""";
                         sendMessage(update, temp);
+                        contactm++;
                         break;
                     case "Отзыв":
                         temp = "Пожалуйста можете заполнить эту форму: ";
@@ -175,6 +186,16 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                     default:
                         sendMessage(update, "Скоро свяжемся, спасибо что выбрали нас)");
                         sendAdmin(update);
+                        break;
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                int dayOfWeek = calendar.get(Calendar.MINUTE);
+                List<CounterM> counterM;
+                counterM = (List<CounterM>) counterR.findAll();
+                if (--dayOfWeek <= Integer.parseInt(counterM.get(counterM.size()-1).getDate())) {
+                    CounterM counterS = new CounterM(start, prices, certificate, timetable, club, arsenal, contactm, String.valueOf(dayOfWeek));
+                    counterR.save(counterS);
                 }
             }
         } else if (update.hasCallbackQuery()) {
