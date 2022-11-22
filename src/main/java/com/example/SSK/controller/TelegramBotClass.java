@@ -48,7 +48,6 @@ public class TelegramBotClass extends TelegramLongPollingBot {
         this.BOT_USERNAME = BOT_USERNAME;
         List<BotCommand> menu = new ArrayList<>();
         menu.add(new BotCommand("/start", "О нас"));
-        menu.add(new BotCommand("/prices", "Цены"));
         menu.add(new BotCommand("/certificate", "Подарочные сертификаты"));
         menu.add(new BotCommand("/timetable", "Расписание"));
         menu.add(new BotCommand("/club", "Как стать членом клуба"));
@@ -75,7 +74,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         String temp;
         if (update.hasMessage() && update.getMessage().hasText()) {
-            if (update.getMessage().getChatId() == /*667621439L*/55) {
+            if (update.getMessage().getChatId() == 667621439L) {
                 try {
                     execute(confirmMessage(update));
                 } catch (TelegramApiException e) {
@@ -83,41 +82,28 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                 }
             } else {
                 switch (update.getMessage().getText()) {
-                    case "/start":
+                    case "/start" -> {
                         aboutUs(update);
                         start++;
-                        break;
-                    case "/prices":
+                    }
+                    case "Цены" -> {
                         temp = """
-                                УСЛУГИ КЛУБА
-                                Аренда галереи - Договорная
-                                Хранение оружия - Договорная
-                                Чистка оружия - Договорная
-                                Пристрелка оружия - Договорная
-                                Диагностика оружия - Договорная
-                                Аренда шкафчика - Договорная
-                                9×19 Luger ТПЗ - Договорная
-                                9×18 БПЗ - Договорная
-                                .40 S&B - Договорная
-                                .45 ACP ТПЗ - Договорная
-                                .22 LR S&B - Договорная
-                                5,45×39 / 7,62×39 / .223Rem (5,56×45) - Договорная
-                                12×76 - Договорная
-                                .50 AE (Desert Eagle) - Договорная
-                                                            
-                                А курсы:
+                                🔥 Карабин Сайга 9. 10 выстрелов. +18 лет. 1 ознакомительное занятие — 1200 сом
+                                🔥 Карабин Сайга 9. 30 выстрелов. +18 лет. 1 ознакомительное занятие — 3600 сом
+                                🔥 Пистолет Glock. 15 выстрелов. +18 лет. 1 ознакомительное занятие — 1800 сом
+                                🔥 Пистолет Glock. 30 выстрелов. +18 лет. 1 ознакомительное занятие — 3600 сом
+                                🔥 Пистолет Викинг. 15 выстрелов. +18 лет. 1 ознакомительное занятие — 1800 сом
+                                🔥 Пистолет Викинг. 30 выстрелов. +18 лет. 1 ознакомительное занятие — 3600 сом
+                                🔥 Пистолет Марголина 22-LR. 15 выстрелов. +18 лет. 1 ознакомительное занятие — 1400 сом
+                                🔥 Пистолет Марголина 22-LR. 30 выстрелов. +18 лет. 1 ознакомительное занятие — 2800 сом
+                                🔥 Пистолет Байкал (ПМ). 15 выстрелов. +18 лет. 1 ознакомительное занятие — 1400 сом
+                                🔥 Пистолет Байкал (ПМ). 30 выстрелов. +18 лет. 1 ознакомительное занятие — 2800 сом
+                                🔥 Пакет "Меткий выстрел". 10 выстрелов из малокалиберной винтовки + медаль от 9Х19. +18 лет. 1 ознакомительное занятие — 2100 сом      
                                 """;
                         sendMessage(update, temp);
-                        sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/SSK/blob/main/src/main/resources/static/img/1.jpg?raw=true");
-                        sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/SSK/blob/main/src/main/resources/static/img/1.jpg?raw=true");
-                        sendMessage(update, """
-                                !!!Всем участникам тренировочных занятий необходимо быть членами клуба.
-                                Все участники тренировочных занятий обязаны следовать Правилам клуба и нести ответственность за их несоблюдение.
-                                Выстрелы оплачиваются отдельно на рецепции.
-                                Минимальная длительность тренировки 1 час.!!!""");
                         prices++;
-                        break;
-                    case "/club":
+                    }
+                    case "/club" -> {
                         temp = "ПРАВИЛА ПОСЕЩЕНИЯ";
                         sendMessage(update, temp);
                         sendDocument(update);
@@ -132,28 +118,31 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                 ✓ боевое оружие""";
                         sendMessage(update, temp);
                         club++;
-                        break;
-                    case "/certificate":
+                    }
+                    case "/certificate" -> {
                         type(update.getMessage().getChatId());
                         certificate++;
-                        break;
-                    case "/timetable":
+                    }
+                    case "/timetable" -> {
+                        temp = "Понедельник - воскресенье\n" +
+                                "14:00-21:00";
+                        sendMessage(update, temp);
                         timetable++;
-                        break;
-                    case "/arsenal":
+                    }
+                    case "/arsenal" -> {
                         sendPhoto(update.getMessage().getChatId(), "https://github.com/nazimaBeauty/karvenBot/blob/master/src/main/resources/image.png?raw=true");
                         temp = """
                                 АРСЕНАЛ КЛУБА
                                 Стрелковый клуб располагает самым большим в Бишкеке арсеналом оружия различных марок, моделей и калибров""";
                         sendMessage(update, temp + "\n\nhttp://919.kg/#prsert");
                         arsenal++;
-                        break;
-                    case "Геолокация":
+                    }
+                    case "Геолокация" -> {
                         sendMessage(update, "Мы находимся: ");
                         temp = "https://2gis.kg/bishkek/search/%D1%83%D0%BB.%D0%A7%D0%BE%D0%BA%D0%B0%D0%BD%D0%B0%20%D0%92%D0%B0%D0%BB%D0%B8%D1%85%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0%202%2F14/geo/70030076166323822/74.677277%2C42.857861?m=74.677294%2C42.857851%2F17.7";
                         sendMessage(update, temp);
-                        break;
-                    case "/contact":
+                    }
+                    case "/contact" -> {
                         temp = """
                                 Контакты: +996509020253
                                 Понедельник - воскресенье
@@ -167,12 +156,12 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                                 whatsapp: https://wa.link/gfoqva""";
                         sendMessage(update, temp);
                         contactm++;
-                        break;
-                    case "Отзыв":
+                    }
+                    case "Отзыв" -> {
                         temp = "Пожалуйста можете заполнить эту форму: ";
                         sendMessage(update, temp + "http://localhost:5000/");
-                        break;
-                    case "Заказать звонок":
+                    }
+                    case "Заказать звонок" -> {
                         sendMessage(update, "Скоро администратор свяжется.");
                         SendMessage message = new SendMessage();
                         message.setChatId(667621439L);
@@ -182,21 +171,26 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        break;
-                    default:
+                    }
+                    case "Записаться" -> {
+                        temp = greetingPage();
+                        sendMessage(update, temp);
+                        try {
+                            execute(bookingPage(update));
+                        } catch (TelegramApiException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    default -> {
                         sendMessage(update, "Скоро свяжемся, спасибо что выбрали нас)");
                         sendAdmin(update);
-                        break;
+                    }
                 }
 
                 Calendar calendar = Calendar.getInstance();
                 int dayOfWeek = calendar.get(Calendar.MINUTE);
-                List<CounterM> counterM;
-                counterM = (List<CounterM>) counterR.findAll();
-                if (--dayOfWeek <= Integer.parseInt(counterM.get(counterM.size()-1).getDate())) {
-                    CounterM counterS = new CounterM(start, prices, certificate, timetable, club, arsenal, contactm, String.valueOf(dayOfWeek));
-                    counterR.save(counterS);
-                }
+                CounterM counterS = new CounterM(start, prices, certificate, timetable, club, arsenal, contactm, String.valueOf(dayOfWeek));
+                counterR.save(counterS);
             }
         } else if (update.hasCallbackQuery()) {
             try {
@@ -219,6 +213,39 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                 throw new RuntimeException(e);
             }
         }
+
+    }
+
+    private SendMessage bookingPage(Update update) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+
+        inlineKeyboardButton1.setText("Огнестрельные");
+        inlineKeyboardButton1.setCallbackData("Огнестрельные");
+        inlineKeyboardButton2.setText("Пневматическое");
+        inlineKeyboardButton2.setCallbackData("Пневматическое");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow1.add(inlineKeyboardButton2);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(update.getMessage().getChatId());
+        sendMessage.setText("Какая направления?");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private String greetingPage() {
+        String[] greet = {"Мы знакомы? Дээ шучу, Привет!", "Не верю своим глазам! Ты ли это бро?", "Мне кажется или я где-то вас видел?", "Какие люди нарисовались!", "Здравствуйте, товарищи!", "Давно не виделись, что я забыл черты твоего лица.", "Салют!", "Мое почтение!", "Вот ты и попался! Come here bro"};
+        Random r = new Random();
+        return greet[r.nextInt(greet.length)];
 
     }
 
@@ -301,10 +328,9 @@ public class TelegramBotClass extends TelegramLongPollingBot {
     }
 
     private String checkPodMenu(Long chatId, String data) {
-        String s = "";
+        String s = " ";
         switch (data) {
-            case "onlineC" ->
-                    s = "Пополните баланс на счет 1180000098542005 и отправьте чек или звоните на +996509020253";
+            case "onlineC" -> s = "Пожалуйста заполните эту форму: ссылка на ваш сайт";
             case "offlineC" -> s = "Звоните на +996509020253";
             case "Отправить" -> s = adminSend(globalMessage);
             case "Отмена" -> s = "Отменено";
@@ -367,9 +393,111 @@ public class TelegramBotClass extends TelegramLongPollingBot {
                 s = new Date() + ", id: " + chatId;
             }
             case "Не одобрить" -> s = "Не одобрено";
-            default -> s = "";
+            case "Пневматическое" -> choosePnev(chatId);
+            case "Огнестрельные" -> chooseOgn(chatId);
+            case "Пистолет", "Винтовка", "аренда", "курс" ->
+                    s = "Скоро администратор свяжется или звоните на +996509020253";
+            case "посетить" -> typeGun(chatId);
+            default -> s = "пока что не готово этот часть";
         }
         return s;
+    }
+
+    private void typeGun(Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+
+        inlineKeyboardButton1.setText("Пистолет");
+        inlineKeyboardButton1.setCallbackData("Пистолет");
+        inlineKeyboardButton2.setText("Карабин");
+        inlineKeyboardButton2.setCallbackData("Винтовка");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow1.add(inlineKeyboardButton2);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Выберите оружие");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void chooseOgn(Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton();
+
+        inlineKeyboardButton1.setText("Аренда дорожки");
+        inlineKeyboardButton1.setCallbackData("аренда");
+        inlineKeyboardButton2.setText("Курс");
+        inlineKeyboardButton2.setCallbackData("курс");
+        inlineKeyboardButton3.setText("Информация для посещения");
+        inlineKeyboardButton3.setCallbackData("посетить");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow1.add(inlineKeyboardButton2);
+        keyboardButtonsRow2.add(inlineKeyboardButton3);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Тип оружия?");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void choosePnev(Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+
+        inlineKeyboardButton1.setText("Пистолет");
+        inlineKeyboardButton1.setCallbackData("Пистолет");
+        inlineKeyboardButton2.setText("Винтовка");
+        inlineKeyboardButton2.setCallbackData("Винтовка");
+
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow1.add(inlineKeyboardButton2);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText("Выберите оружие");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void type(Long id) {
@@ -533,7 +661,9 @@ public class TelegramBotClass extends TelegramLongPollingBot {
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
         KeyboardRow keyboardFourthRow = new KeyboardRow();
+        KeyboardRow keyboardFiveth = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("Записаться"));
+        keyboardFirstRow.add(new KeyboardButton("Цены"));
         keyboardSecondRow.add(new KeyboardButton("Геолокация"));
         keyboardSecondRow.add(new KeyboardButton("Заказать звонок"));
         keyboardSecondRow.add(new KeyboardButton("Отзыв"));
@@ -542,6 +672,7 @@ public class TelegramBotClass extends TelegramLongPollingBot {
         keyboard.add(keyboardSecondRow);
         keyboard.add(keyboardThirdRow);
         keyboard.add(keyboardFourthRow);
+        keyboard.add(keyboardFiveth);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
 
